@@ -34,7 +34,7 @@ export class FileSelectionModal extends FuzzySuggestModal<TFile | string> {
 		this.editor = editor;
 		this.currentFile = currentFile;
 		this.taskLine = taskLine;
-		this.setPlaceholder("选择一个文件或输入创建新文件");
+		this.setPlaceholder("Select a file or enter to create new file");
 	}
 
 	getItems(): (TFile | string)[] {
@@ -54,7 +54,7 @@ export class FileSelectionModal extends FuzzySuggestModal<TFile | string> {
 
 	getItemText(item: TFile | string): string {
 		if (typeof item === "string") {
-			return `创建新文件: ${item}`;
+			return `Create new file: ${item}`;
 		}
 		return item.path;
 	}
@@ -62,7 +62,7 @@ export class FileSelectionModal extends FuzzySuggestModal<TFile | string> {
 	renderSuggestion(item: FuzzyMatch<TFile | string>, el: HTMLElement): void {
 		const match = item.item;
 		if (typeof match === "string") {
-			el.createEl("div", { text: `创建新文件: ${match}` });
+			el.createEl("div", { text: `Create new file: ${match}` });
 		} else {
 			el.createEl("div", { text: match.path });
 		}
@@ -144,9 +144,9 @@ export class FileSelectionModal extends FuzzySuggestModal<TFile | string> {
 			// Open the new file
 			this.app.workspace.getLeaf().openFile(newFile);
 
-			new Notice(`任务已移动到 ${fileName}`);
+			new Notice(`Task moved to ${fileName}`);
 		} catch (error) {
-			new Notice(`创建文件失败: ${error}`);
+			new Notice(`Failed to create file: ${error}`);
 			console.error(error);
 		}
 	}
@@ -237,7 +237,7 @@ export class FileSelectionModal extends FuzzySuggestModal<TFile | string> {
 	}
 }
 
-// 任务迁移模式
+// Task migration mode
 export enum InsertMode {
 	TOP = "top",
 	BOTTOM = "bottom",
@@ -246,7 +246,7 @@ export enum InsertMode {
 	AS_SIBLING = "asSibling"
 }
 
-// 任务迁移标记设置
+// Task migration mark settings
 export interface MigrationMarkSettings {
 	enabled: boolean;
 	markType: "date" | "version" | "custom";
@@ -290,7 +290,7 @@ export class BlockSelectionModal extends SuggestModal<{
 		this.taskLine = taskLine;
 		this.metadataCache = app.metadataCache;
 		
-		// 使用插件设置中的默认值
+		// Use default values from plugin settings
 		this.insertMode = plugin.settings.taskMoveSettings.defaultInsertMode as InsertMode || InsertMode.AFTER_BLOCK;
 		this.migrationMarkSettings = {
 			enabled: plugin.settings.taskMoveSettings.enableMigrationMark,
@@ -298,7 +298,7 @@ export class BlockSelectionModal extends SuggestModal<{
 			customMark: plugin.settings.taskMoveSettings.defaultCustomMark,
 		};
 		
-		this.setPlaceholder("选择插入位置或特殊选项");
+		this.setPlaceholder("Select insertion point or special options");
 	}
 
 	async getSuggestions(
@@ -313,43 +313,43 @@ export class BlockSelectionModal extends SuggestModal<{
 
 		let blocks: { id: string; text: string; level: number }[] = [];
 
-		// 添加顶部和底部选项
+		// Add top and bottom options
 		blocks.push({
 			id: "special-top",
-			text: "📝 插入到文件顶部",
+			text: "📝 Insert at file top",
 			level: 0,
 		});
 		
 		blocks.push({
 			id: "special-bottom",
-			text: "📝 插入到文件底部",
+			text: "📝 Insert at file bottom",
 			level: 0,
 		});
 
-		// 添加插入模式选项
+		// Add insert mode options
 		blocks.push({
 			id: "special-mode-child",
-			text: "📝 作为子任务插入 (增加缩进)",
+			text: "📝 Insert as child task (increase indentation)",
 			level: 0,
 		});
 		
 		blocks.push({
 			id: "special-mode-sibling",
-			text: "📝 作为同级任务插入 (保持缩进)",
+			text: "📝 Insert as sibling task (keep indentation)",
 			level: 0,
 		});
 		
-		// 添加迁移标记选项
+		// Add migration mark options
 		blocks.push({
 			id: "special-mark-settings",
-			text: "📝 设置迁移标记 (日期、版本号等)",
+			text: "📝 Set migration mark (date, version, etc.)",
 			level: 0,
 		});
 
 		// Add an option to insert at the beginning of the file
 		blocks.push({
 			id: "beginning",
-			text: "文件开头",
+			text: "File beginning",
 			level: 0,
 		});
 
@@ -392,7 +392,7 @@ export class BlockSelectionModal extends SuggestModal<{
 		block: { id: string; text: string; level: number },
 		el: HTMLElement
 	) {
-		// 特殊选项不应用缩进
+		// Special options don't apply indentation
 		if (block.id.startsWith("special-")) {
 			el.createEl("div", { text: block.text });
 			return;
@@ -411,7 +411,7 @@ export class BlockSelectionModal extends SuggestModal<{
 		block: { id: string; text: string; level: number },
 		evt: MouseEvent | KeyboardEvent
 	) {
-		// 处理特殊选项
+		// Handle special options
 		if (block.id === "special-top") {
 			this.insertMode = InsertMode.TOP;
 			this.moveTaskToTargetFile({ id: "beginning", text: "", level: 0 });
@@ -470,7 +470,7 @@ export class BlockSelectionModal extends SuggestModal<{
 			// Get task content
 			let taskContent = this.getTaskWithChildren();
 			
-			// 如果启用了迁移标记，添加标记
+			// Add migration mark if enabled
 			if (this.migrationMarkSettings.enabled) {
 				taskContent = this.addMigrationMark(taskContent);
 			}
@@ -492,7 +492,7 @@ export class BlockSelectionModal extends SuggestModal<{
 				// Extract line number from block id
 				const lineMatch = block.id.match(/-(\d+)$/);
 				if (!lineMatch) {
-					throw new Error("无效的块ID");
+					throw new Error("Invalid block ID");
 				}
 
 				const lineNumber = parseInt(lineMatch[1]);
@@ -501,7 +501,7 @@ export class BlockSelectionModal extends SuggestModal<{
 				// Get indentation of the target block
 				indentLevel = this.getIndentation(lines[lineNumber]);
 				
-				// 如果是作为子任务插入，增加缩进
+				// If inserting as child task, increase indentation
 				if (this.insertMode === InsertMode.AS_CHILD) {
 					indentLevel += buildIndentString(this.app).length;
 				}
@@ -529,9 +529,9 @@ export class BlockSelectionModal extends SuggestModal<{
 			// Open the target file
 			this.app.workspace.getLeaf().openFile(this.targetFile);
 
-			new Notice(`任务已移动到 ${this.targetFile.path}`);
+			new Notice(`Task moved to ${this.targetFile.path}`);
 		} catch (error) {
-			new Notice(`移动任务失败: ${error}`);
+			new Notice(`Failed to move task: ${error}`);
 			console.error(error);
 		}
 	}
@@ -541,7 +541,7 @@ export class BlockSelectionModal extends SuggestModal<{
 		const firstLine = lines[0];
 		let mark = "";
 		
-		// 基于标记类型生成标记
+		// Generate mark based on mark type
 		if (this.migrationMarkSettings.markType === "date") {
 			mark = `📅 ${new Date().toISOString().split('T')[0]}`;
 		} else if (this.migrationMarkSettings.markType === "version") {
@@ -550,7 +550,7 @@ export class BlockSelectionModal extends SuggestModal<{
 			mark = this.migrationMarkSettings.customMark;
 		}
 		
-		// 在任务行末尾添加标记
+		// Add mark at the end of the task line
 		lines[0] = `${firstLine} ${mark}`;
 		
 		return lines.join("\n");
@@ -657,7 +657,7 @@ export class BlockSelectionModal extends SuggestModal<{
 }
 
 /**
- * 迁移标记设置模态框
+ * Migration mark settings modal
  */
 export class MigrationMarkModal extends Modal {
 	private blockSelectionModal: BlockSelectionModal;
@@ -679,43 +679,43 @@ export class MigrationMarkModal extends Modal {
 		contentEl.empty();
 		contentEl.addClass("migration-mark-modal");
 		
-		contentEl.createEl("h2", { text: "设置迁移标记" });
+		contentEl.createEl("h2", { text: "Set Migration Mark" });
 		
-		// 启用标记切换
+		// Enable mark toggle
 		new Setting(contentEl)
-			.setName("启用迁移标记")
-			.setDesc("移动任务时添加标记（如日期、版本号等）")
+			.setName("Enable migration mark")
+			.setDesc("Add mark (like date, version, etc.) when moving tasks")
 			.addToggle(toggle => {
 				toggle
 					.setValue(this.blockSelectionModal.migrationMarkSettings.enabled)
 					.onChange(value => {
 						this.blockSelectionModal.migrationMarkSettings.enabled = value;
-						// 刷新显示状态
+						// Refresh display status
 						this.updateCustomMarkVisibility();
 					});
 			});
 		
-		// 标记类型选择
+		// Mark type selection
 		new Setting(contentEl)
-			.setName("标记类型")
-			.setDesc("选择要添加的标记类型")
+			.setName("Mark type")
+			.setDesc("Select the type of mark to add")
 			.addDropdown(dropdown => {
 				dropdown
-					.addOption("date", "日期 (YYYY-MM-DD)")
-					.addOption("version", "版本号")
-					.addOption("custom", "自定义")
+					.addOption("date", "Date (YYYY-MM-DD)")
+					.addOption("version", "Version number")
+					.addOption("custom", "Custom")
 					.setValue(this.blockSelectionModal.migrationMarkSettings.markType)
 					.onChange(value => {
 						this.blockSelectionModal.migrationMarkSettings.markType = value as any;
-						// 刷新显示状态
+						// Refresh display status
 						this.updateCustomMarkVisibility();
 					});
 			});
 		
-		// 自定义标记输入
+		// Custom mark input
 		const customMarkSetting = new Setting(contentEl)
-			.setName("自定义标记")
-			.setDesc("输入要添加的自定义标记内容")
+			.setName("Custom mark")
+			.setDesc("Enter the custom mark content to add")
 			.addText(text => {
 				text
 					.setValue(this.blockSelectionModal.migrationMarkSettings.customMark)
@@ -724,52 +724,52 @@ export class MigrationMarkModal extends Modal {
 					});
 			});
 		
-		// 预览
+		// Preview
 		let previewSetting = new Setting(contentEl)
-			.setName("预览")
-			.setDesc("任务行将显示如下:");
+			.setName("Preview")
+			.setDesc("Task line will appear as:");
 		
 		const previewEl = contentEl.createEl("div", { cls: "migration-mark-preview" });
-		previewEl.createEl("code", { text: "- [ ] 任务示例" });
+		previewEl.createEl("code", { text: "- [ ] Task example" });
 		
-		// 按钮
+		// Buttons
 		new Setting(contentEl)
 			.addButton(button => {
 				button
-					.setButtonText("确定")
+					.setButtonText("Confirm")
 					.setCta()
 					.onClick(() => {
 						this.close();
-						// 重新打开块选择模态框
+						// Reopen block selection modal
 						this.blockSelectionModal.open();
 					});
 			})
 			.addButton(button => {
 				button
-					.setButtonText("取消")
+					.setButtonText("Cancel")
 					.onClick(() => {
-						// 重置标记设置
+						// Reset mark settings
 						this.blockSelectionModal.migrationMarkSettings = {
 							enabled: false,
 							markType: "date",
 							customMark: "",
 						};
 						this.close();
-						// 重新打开块选择模态框
+						// Reopen block selection modal
 						this.blockSelectionModal.open();
 					});
 			});
 			
-		// 初始化显示状态
+		// Initialize display status
 		this.updateCustomMarkVisibility();
 		this.updatePreview(previewEl);
 		
-		// 添加事件监听器更新预览
+		// Add event listener to update preview
 		this.blockSelectionModal.migrationMarkSettings.enabled && this.updatePreview(previewEl);
 	}
 	
 	private updateCustomMarkVisibility() {
-		// 获取自定义标记设置元素
+		// Get custom mark setting element
 		const customMarkSetting = this.contentEl.querySelector(".setting:nth-child(3)");
 		
 		if (customMarkSetting) {
@@ -781,7 +781,7 @@ export class MigrationMarkModal extends Modal {
 			}
 		}
 		
-		// 更新预览
+		// Update preview
 		const previewEl = this.contentEl.querySelector(".migration-mark-preview code");
 		if (previewEl) {
 			this.updatePreview(previewEl as HTMLElement);
@@ -790,7 +790,7 @@ export class MigrationMarkModal extends Modal {
 	
 	private updatePreview(previewEl: HTMLElement) {
 		if (!this.blockSelectionModal.migrationMarkSettings.enabled) {
-			previewEl.textContent = "- [ ] 任务示例";
+			previewEl.textContent = "- [ ] Task example";
 			return;
 		}
 		
@@ -804,7 +804,7 @@ export class MigrationMarkModal extends Modal {
 			mark = this.blockSelectionModal.migrationMarkSettings.customMark;
 		}
 		
-		previewEl.textContent = `- [ ] 任务示例 ${mark}`;
+		previewEl.textContent = `- [ ] Task example ${mark}`;
 	}
 	
 	onClose() {
@@ -839,7 +839,7 @@ export function moveTaskCommand(
 
 	// Execute the command
 	if (!currentFile) {
-		new Notice("未找到活动文件");
+		new Notice("No active file found");
 		return false;
 	}
 
