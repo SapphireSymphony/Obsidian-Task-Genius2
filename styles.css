@@ -694,3 +694,35 @@ settings:
 	margin-right: 4px;
 	vertical-align: middle;
 }
+
+/* 迁移标记模态框样式 */
+.migration-mark-modal {
+    padding: 20px;
+}
+
+.migration-mark-preview {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: var(--background-secondary);
+    border-radius: 5px;
+}
+
+.migration-mark-preview code {
+    font-family: var(--font-monospace);
+    white-space: nowrap;
+}
+
+/* 为特殊选项添加图标和样式 */
+.suggestion-item[aria-label*="插入到文件顶部"],
+.suggestion-item[aria-label*="插入到文件底部"],
+.suggestion-item[aria-label*="作为子任务插入"],
+.suggestion-item[aria-label*="作为同级任务插入"],
+.suggestion-item[aria-label*="设置迁移标记"] {
+    font-weight: bold;
+    color: var(--text-accent);
+}
+
+/* 为MigrationMarkModal中的按钮增加一些间距 */
+.migration-mark-modal .setting:last-child {
+    margin-top: 20px;
+}

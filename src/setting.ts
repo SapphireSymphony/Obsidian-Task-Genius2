@@ -60,6 +60,14 @@ export interface TaskProgressBarSettings {
 	// Cycle complete status settings
 	enableCycleCompleteStatus: boolean;
 	alwaysCycleNewTasks: boolean;
+	
+	// 任务移动设置
+	taskMoveSettings: {
+		defaultInsertMode: string;
+		enableMigrationMark: boolean;
+		defaultMarkType: string;
+		defaultCustomMark: string;
+	}
 }
 
 export const DEFAULT_SETTINGS: TaskProgressBarSettings = {
@@ -125,6 +133,14 @@ export const DEFAULT_SETTINGS: TaskProgressBarSettings = {
 	// Cycle complete status settings
 	enableCycleCompleteStatus: true,
 	alwaysCycleNewTasks: false,
+	
+	// 任务移动设置
+	taskMoveSettings: {
+		defaultInsertMode: "afterBlock", // afterBlock, top, bottom, asChild, asSibling
+		enableMigrationMark: false,
+		defaultMarkType: "date", // date, version, custom
+		defaultCustomMark: "",
+	}
 };
 
 export class TaskProgressBarSettingTab extends PluginSettingTab {
@@ -831,6 +847,8 @@ export class TaskProgressBarSettingTab extends PluginSettingTab {
 		this.addPriorityPickerSettings();
 		this.addDatePickerSettings();
 
+		this.addTaskMoveSettings();
+
 		new Setting(containerEl).setName("Say Thank You").setHeading();
 
 		new Setting(containerEl)
@@ -841,8 +859,6 @@ export class TaskProgressBarSettingTab extends PluginSettingTab {
 			.addButton((bt) => {
 				bt.buttonEl.outerHTML = `<a href="https://www.buymeacoffee.com/boninall"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=boninall&button_colour=6495ED&font_colour=ffffff&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00"></a>`;
 			});
-
-		// Add Priority Picker Settings
 	}
 
 	showNumberToProgressbar() {
@@ -1105,5 +1121,67 @@ export class TaskProgressBarSettingTab extends PluginSettingTab {
 						this.applySettingsUpdate();
 					})
 			);
+	}
+
+	addTaskMoveSettings() {
+		const { containerEl } = this;
+		
+		containerEl.createEl("h3", { text: "任务移动设置" });
+		
+		new Setting(containerEl)
+			.setName("默认插入模式")
+			.setDesc("设置任务移动时的默认插入模式")
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("afterBlock", "插入到选择的块之后")
+					.addOption("top", "插入到文件顶部")
+					.addOption("bottom", "插入到文件底部")
+					.addOption("asChild", "作为子任务插入（增加缩进）")
+					.addOption("asSibling", "作为同级任务插入（保持缩进）")
+					.setValue(this.plugin.settings.taskMoveSettings.defaultInsertMode)
+					.onChange(async (value) => {
+						this.plugin.settings.taskMoveSettings.defaultInsertMode = value;
+						this.applySettingsUpdate();
+					});
+			});
+			
+		new Setting(containerEl)
+			.setName("启用迁移标记")
+			.setDesc("移动任务时默认添加标记（如日期、版本号等）")
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.taskMoveSettings.enableMigrationMark)
+					.onChange(async (value) => {
+						this.plugin.settings.taskMoveSettings.enableMigrationMark = value;
+						this.applySettingsUpdate();
+					});
+			});
+			
+		new Setting(containerEl)
+			.setName("默认标记类型")
+			.setDesc("设置任务移动时的默认标记类型")
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("date", "日期 (YYYY-MM-DD)")
+					.addOption("version", "版本号")
+					.addOption("custom", "自定义")
+					.setValue(this.plugin.settings.taskMoveSettings.defaultMarkType)
+					.onChange(async (value) => {
+						this.plugin.settings.taskMoveSettings.defaultMarkType = value;
+						this.applySettingsUpdate();
+					});
+			});
+			
+		new Setting(containerEl)
+			.setName("自定义标记")
+			.setDesc("设置自定义迁移标记的内容")
+			.addText((text) => {
+				text
+					.setValue(this.plugin.settings.taskMoveSettings.defaultCustomMark)
+					.onChange(async (value) => {
+						this.plugin.settings.taskMoveSettings.defaultCustomMark = value;
+						this.applySettingsUpdate();
+					});
+			});
 	}
 }
