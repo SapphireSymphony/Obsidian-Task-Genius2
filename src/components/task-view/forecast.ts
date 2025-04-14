@@ -424,17 +424,25 @@ export class ForecastComponent extends Component {
 		);
 
 		// Split into past due, today, and future
-		this.pastDueTasks = tasksWithDueDates.filter(
-			(task) => task.dueDate! < todayTimestamp
-		);
+		this.pastDueTasks = tasksWithDueDates.filter((task) => {
+			// Ensure dueDate exists before creating Date object
+			if (!task.dueDate) return false;
+			const dueDate = new Date(task.dueDate);
+			dueDate.setHours(0, 0, 0, 0); // Zero out time
+			return dueDate.getTime() < todayTimestamp; // Compare zeroed dates
+		});
 		this.todayTasks = tasksWithDueDates.filter((task) => {
+			if (!task.dueDate) return false;
 			const dueDate = new Date(task.dueDate!);
 			dueDate.setHours(0, 0, 0, 0);
 			return dueDate.getTime() === todayTimestamp;
 		});
-		this.futureTasks = tasksWithDueDates.filter(
-			(task) => task.dueDate! > todayTimestamp
-		);
+		this.futureTasks = tasksWithDueDates.filter((task) => {
+			if (!task.dueDate) return false;
+			const dueDate = new Date(task.dueDate!);
+			dueDate.setHours(0, 0, 0, 0); // Zero out time
+			return dueDate.getTime() > todayTimestamp; // Compare zeroed dates
+		});
 
 		// Sort tasks by priority and then due date
 		const sortTasksByPriorityAndDueDate = (tasks: Task[]) => {
