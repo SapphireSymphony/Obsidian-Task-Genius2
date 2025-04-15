@@ -115,6 +115,6 @@ Manage all tasks centrally.
 
 ## Support Me
 
-If you enjoy Task Genius and find it useful, please consider supporting my work by buying me a coffee! It helps me dedicate time to maintaining and improving the plugin
+If you enjoy Task Genius and find it useful, please consider supporting my work by buying me a coffee! It helps me dedicate time to maintaining and improving the plugin.
 
 <a href="https://www.buymeacoffee.com/boninall" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=boninall&button_colour=6495ED&font_colour=ffffff&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" alt="Buy Me A Coffee"></a>
