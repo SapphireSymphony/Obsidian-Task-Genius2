@@ -107,29 +107,36 @@ function parseTasksFromContent(filePath: string, content: string): Task[] {
  * Extract dates from task content
  */
 function extractDates(task: Task, content: string): void {
-	// Start date
-	const startDateMatch = content.match(START_DATE_REGEX);
-	if (startDateMatch) {
-		task.startDate = new Date(startDateMatch[1]).getTime();
-	}
+    // Helper function to create a normalized local date
+    function createLocalDate(dateStr) {
+        const date = new Date(dateStr);
+        // Create a new date using local year, month, day components
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+    }
 
-	// Due date
-	const dueDateMatch = content.match(DUE_DATE_REGEX);
-	if (dueDateMatch) {
-		task.dueDate = new Date(dueDateMatch[1]).getTime();
-	}
+    // Start date
+    const startDateMatch = content.match(START_DATE_REGEX);
+    if (startDateMatch) {
+        task.startDate = createLocalDate(startDateMatch[1]);
+    }
 
-	// Scheduled date
-	const scheduledDateMatch = content.match(SCHEDULED_DATE_REGEX);
-	if (scheduledDateMatch) {
-		task.scheduledDate = new Date(scheduledDateMatch[1]).getTime();
-	}
+    // Due date
+    const dueDateMatch = content.match(DUE_DATE_REGEX);
+    if (dueDateMatch) {
+        task.dueDate = createLocalDate(dueDateMatch[1]);
+    }
 
-	// Completion date
-	const completedDateMatch = content.match(COMPLETED_DATE_REGEX);
-	if (completedDateMatch) {
-		task.completedDate = new Date(completedDateMatch[1]).getTime();
-	}
+    // Scheduled date
+    const scheduledDateMatch = content.match(SCHEDULED_DATE_REGEX);
+    if (scheduledDateMatch) {
+        task.scheduledDate = createLocalDate(scheduledDateMatch[1]);
+    }
+
+    // Completion date
+    const completedDateMatch = content.match(COMPLETED_DATE_REGEX);
+    if (completedDateMatch) {
+        task.completedDate = createLocalDate(completedDateMatch[1]);
+    }
 }
 
 /**
