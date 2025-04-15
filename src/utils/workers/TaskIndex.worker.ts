@@ -108,7 +108,7 @@ function parseTasksFromContent(filePath: string, content: string): Task[] {
  */
 function extractDates(task: Task, content: string): void {
     // Helper function to create a normalized local date
-    function createLocalDate(dateStr) {
+    function createLocalDate(dateStr: string): number {
         const date = new Date(dateStr);
         // Create a new date using local year, month, day components
         return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
