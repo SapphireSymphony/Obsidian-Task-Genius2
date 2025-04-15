@@ -553,8 +553,10 @@ export class QuickCaptureModal extends Modal {
 	}
 
 	parseDate(dateString: string): Date {
-		return new Date(dateString);
-	}
+    const date = new Date(dateString);
+    // Create a new date using local components to avoid timezone issues
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
 
 	onClose() {
 		const { contentEl } = this;
