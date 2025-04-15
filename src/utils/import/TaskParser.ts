@@ -164,7 +164,7 @@ export class TaskParser extends Component {
 		}
 
 		// Add this helper function at the beginning of your method
-function createLocalDate(dateStr) {
+function createLocalDate(dateStr: string): number {
     const date = new Date(dateStr);
     return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 }
