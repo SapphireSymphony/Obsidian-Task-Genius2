@@ -163,56 +163,61 @@ export class TaskParser extends Component {
 			}
 		}
 
-		// Due date - both emoji and regular formats
-		const dueDateMatch =
-			content.match(this.dueDateRegex) ||
-			content.match(/due(?:\s+on)?(?:\s*:\s*|\s+)(\d{4}-\d{2}-\d{2})/i);
+		// Add this helper function at the beginning of your method
+function createLocalDate(dateStr) {
+    const date = new Date(dateStr);
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
 
-		if (dueDateMatch) {
-			try {
-				task.dueDate = new Date(dueDateMatch[1]).getTime();
-			} catch (e) {
-				console.error("Failed to parse due date:", dueDateMatch[1], e);
-			}
-		}
+const dueDateMatch =
+    content.match(this.dueDateRegex) ||
+    content.match(/due(?:\s+on)?(?:\s*:\s*|\s+)(\d{4}-\d{2}-\d{2})/i);
 
-		// Scheduled date - both emoji and regular formats
-		const scheduledDateMatch =
-			content.match(this.scheduledDateRegex) ||
-			content.match(
-				/scheduled?(?:\s+on)?(?:\s*:\s*|\s+)(\d{4}-\d{2}-\d{2})/i
-			);
+if (dueDateMatch) {
+    try {
+        task.dueDate = createLocalDate(dueDateMatch[1]);
+    } catch (e) {
+        console.error("Failed to parse due date:", dueDateMatch[1], e);
+    }
+}
 
-		if (scheduledDateMatch) {
-			try {
-				task.scheduledDate = new Date(scheduledDateMatch[1]).getTime();
-			} catch (e) {
-				console.error(
-					"Failed to parse scheduled date:",
-					scheduledDateMatch[1],
-					e
-				);
-			}
-		}
+// Scheduled date - both emoji and regular formats
+const scheduledDateMatch =
+    content.match(this.scheduledDateRegex) ||
+    content.match(
+        /scheduled?(?:\s+on)?(?:\s*:\s*|\s+)(\d{4}-\d{2}-\d{2})/i
+    );
 
-		// Completion date - both emoji and regular formats
-		const completedDateMatch =
-			content.match(this.completedDateRegex) ||
-			content.match(
-				/completed?(?:\s+on)?(?:\s*:\s*|\s+)(\d{4}-\d{2}-\d{2})/i
-			);
+if (scheduledDateMatch) {
+    try {
+        task.scheduledDate = createLocalDate(scheduledDateMatch[1]);
+    } catch (e) {
+        console.error(
+            "Failed to parse scheduled date:",
+            scheduledDateMatch[1],
+            e
+        );
+    }
+}
 
-		if (completedDateMatch) {
-			try {
-				task.completedDate = new Date(completedDateMatch[1]).getTime();
-			} catch (e) {
-				console.error(
-					"Failed to parse completion date:",
-					completedDateMatch[1],
-					e
-				);
-			}
-		}
+// Completion date - both emoji and regular formats
+const completedDateMatch =
+    content.match(this.completedDateRegex) ||
+    content.match(
+        /completed?(?:\s+on)?(?:\s*:\s*|\s+)(\d{4}-\d{2}-\d{2})/i
+    );
+
+if (completedDateMatch) {
+    try {
+        task.completedDate = createLocalDate(completedDateMatch[1]);
+    } catch (e) {
+        console.error(
+            "Failed to parse completion date:",
+            completedDateMatch[1],
+            e
+        );
+    }
+}
 	}
 
 	/**
