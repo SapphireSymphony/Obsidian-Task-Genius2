@@ -45,7 +45,7 @@
 		"esbuild": "0.13.12",
 		"esbuild-plugin-inline-worker": "https://github.com/mitschabaude/esbuild-plugin-inline-worker",
 		"monkey-around": "^3.0.0",
-		"obsidian": "^1.8.7",
+		"obsidian": "1.8.7",
 		"obsidian-typings": "2.44.3",
 		"regexp-match-indices": "^1.0.2",
 		"tslib": "2.4.0",
