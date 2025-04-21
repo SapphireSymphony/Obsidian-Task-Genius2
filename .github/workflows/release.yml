@@ -33,6 +33,12 @@ jobs:
                   sed -i '10s/.*/export {};/' node_modules/obsidian/obsidian.d.ts
                   echo "Fixed line now reads:"
                   sed -n '10p' node_modules/obsidian/obsidian.d.ts
+            - name: Debug missing files
+              run: |
+                echo "Looking for taskFilterUtils..."
+                find src -name "taskFilterUtils*"
+                echo "Directory structure:"
+                ls -la src/utils/
               
             - name: Build
               id: build
