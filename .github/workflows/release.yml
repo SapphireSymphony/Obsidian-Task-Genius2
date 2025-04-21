@@ -12,20 +12,38 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+            
             - name: Use Node.js
               uses: actions/setup-node@v3
               with:
                   node-version: 16
+                  
+            - name: Install dependencies
+              run: npm install
+              
+
+            - name: Examine problematic declaration file
+              run: |
+                  echo "Examining line 10 of obsidian.d.ts:"
+                  sed -n '10p' node_modules/obsidian/obsidian.d.ts || echo "File not found"
+                  
+            - name: Patch declaration file
+              run: |
+                  echo "Patching obsidian.d.ts file..."
+                  sed -i '10s/.*/export {};/' node_modules/obsidian/obsidian.d.ts
+                  echo "Fixed line now reads:"
+                  sed -n '10p' node_modules/obsidian/obsidian.d.ts
+              
             - name: Build
               id: build
               run: |
-                  npm install
                   npm run build
                   mkdir ${{ env.PLUGIN_NAME }}
                   cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
                   zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
                   ls
                   echo "::set-output name=tag_name::$(git tag --sort version:refname | tail -n 1)"
+                  
             - name: Upload zip file
               id: upload-zip
               uses: actions/upload-release-asset@v1
