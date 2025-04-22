@@ -5,6 +5,7 @@ import {
 	TextComponent,
 	ButtonComponent,
 	Notice,
+	moment.
 } from "obsidian";
 import { t } from "../translations/helper";
 import {
@@ -16,7 +17,6 @@ import {
 	ViewMode,
 } from "../common/setting-definition";
 import TaskProgressBarPlugin from "../index";
-import moment from "moment";
 
 export class ViewConfigModal extends Modal {
 	private viewConfig: ViewConfig;
