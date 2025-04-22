@@ -5,7 +5,7 @@ import {
 	TextComponent,
 	ButtonComponent,
 	Notice,
-	moment.
+	moment,
 } from "obsidian";
 import { t } from "../translations/helper";
 import {
