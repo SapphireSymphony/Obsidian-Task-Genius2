@@ -16,11 +16,16 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 16
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+                  run_install: false
             - name: Build
               id: build
               run: |
-                  npm ci
-                  npm run build
+                  pnpm install
+                  pnpm run build
                   mkdir ${{ env.PLUGIN_NAME }}
                   cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
                   zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
